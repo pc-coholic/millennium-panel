@@ -4,4 +4,7 @@ from django.conf import settings
 
 @receiver(user_logged_in)
 def sig_user_logged_in(sender, user, request, **kwargs):
-    request.session['tenant'] = user.groups.all()[0].id
+    try:
+        request.session['tenant'] = user.groups.all()[0].id
+    except:
+        request.session['tenant'] = None
