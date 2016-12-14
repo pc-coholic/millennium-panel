@@ -1,0 +1,41 @@
+{% extends 'suit/admin/base.html' %}
+{# Workaround to avoid circular template extends errors #}
+
+{% load i18n %}
+
+{% block userlinks %}
+    <span class="separator">/</span>
+    {% trans 'Tenant:' %}&nbsp;
+
+    {% if user.groups.all.count > 1 %}
+    <select name="tenant" class="custom-select">
+        {% for group in user.groups.all %}
+        <option value={{ group.id }} {% if group.id == request.session.tenant %} selected="selected" {% endif %}>{{ group.name }}</option>
+        {% endfor %}
+    </select>
+    {% else %}
+    <strong>{{ user.groups.all.0.name }}</strong><input type="hidden" name="tenant" value="{{ user.groups.all.0.id }}"/>
+    {% endif %}
+
+    <span class="separator">/</span>
+
+    {% if user.has_usable_password %}
+        <a href="{% url 'admin:password_change' %}" class="icon-link change-password-link" data-title="{% trans 'Change password' %}">{% trans 'Change password' %}</a>
+        <span class="separator">/</span>
+    {% endif %}
+
+    <a href="{% url 'admin:logout' %}" class="icon-link logout-link" data-title="{% trans 'Log out' %}">{% trans 'Log out' %}</a>
+{% endblock %}
+
+{% block footer_links %}
+    <a href="http://millennium.management/" target="_blank">Homepage</a>
+    <a href="http://wiki.millennium.management/" target="_blank">Wiki</a>
+    <a href="http://panel.millennium.management/" target="_blank">Panel</a>
+{% endblock %}
+
+{% block copyright %}
+    Copyright &copy;
+    <span class="hidden-md-down">2016-</span>{% now "Y" %} Martin Gross
+    <br>Developed by
+    <a href="http://pc-coholic.de/" target="_blank">PC-Coholic.de - Hosting &middot; Service &middot; More</a>
+{% endblock %}
