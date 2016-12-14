@@ -23,7 +23,7 @@ SECRET_KEY = '-rg&k^!na+&(!rf3-&hrf8+9116gt1+g=70$a_#$y2x^#3t_dz'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['pstest.rtt.ag']
+ALLOWED_HOSTS = ['pstest.rtt.ag', '127.0.0.1', 'localhost']
 
 
 # Application definition
