@@ -8,7 +8,7 @@
     {% trans 'Tenant:' %}&nbsp;
 
     {% if user.groups.all.count > 1 %}
-    <select name="tenant" class="custom-select" onchange="location.href = '/tenant/' + this.value; return false;">
+    <select name="tenant" class="btn-sm" onchange="location.href = '/tenant/' + this.value; return false;">
         {% for group in user.groups.all %}
         <option value={{ group.id }} {% if group.id|stringformat:"i" == request.session.tenant %} selected="selected" {% endif %}>{{ group.name }}</option>
         {% endfor %}
