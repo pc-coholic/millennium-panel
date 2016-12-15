@@ -8,13 +8,13 @@
     {% trans 'Tenant:' %}&nbsp;
 
     {% if user.groups.all.count > 1 %}
-    <select name="tenant" class="custom-select">
+    <select name="tenant" class="custom-select" onchange="location.href = '/tenant/' + this.value; return false;">
         {% for group in user.groups.all %}
-        <option value={{ group.id }} {% if group.id == request.session.tenant %} selected="selected" {% endif %}>{{ group.name }}</option>
+        <option value={{ group.id }} {% if group.id|stringformat:"i" == request.session.tenant %} selected="selected" {% endif %}>{{ group.name }}</option>
         {% endfor %}
     </select>
     {% else %}
-    <strong>{{ user.groups.all.0.name }}</strong><input type="hidden" name="tenant" value="{{ user.groups.all.0.id }}"/>
+    <strong>{{ user.groups.all.0.name }}</strong>
     {% endif %}
 
     <span class="separator">/</span>

@@ -16,9 +16,11 @@ Including another URLconf
 from django.conf.urls import include, url
 from django.contrib import admin
 from django.conf import settings
+from millennium.panel import views
 
 urlpatterns = [
-    url(r'^admin/', admin.site.urls),
+    url(r'^tenant/(?P<tenant>\d+)/$', views.change_tenant, name='change_tenant'),
+    url(r'^', admin.site.urls),
 ]
 
 if settings.DEBUG:
