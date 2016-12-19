@@ -2,3 +2,4 @@ Django==1.10.4
 django-debug-toolbar==1.6
 -e git+https://github.com/darklow/django-suit.git@v2#egg=django_suit
 sqlparse==0.2.2
+django-multiselectfield==0.1.4

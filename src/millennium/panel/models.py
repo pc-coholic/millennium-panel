@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import Group
-from django.core.validators import MinLengthValidator, MaxLengthValidator, RegexValidator, MaxValueValidator
+from django.core.validators import MinLengthValidator, MaxLengthValidator, RegexValidator, MinValueValidator, MaxValueValidator
 from multiselectfield import MultiSelectField
 
 # Create your models here.
@@ -887,3 +887,113 @@ class FconfigOpts(models.Model):
         unique_together = (('name', 'tenant'),)
         verbose_name = 'Feature Config & Call Options'
         verbose_name_plural = 'Feature Config & Call Options'
+  
+class CoinValTable(models.Model):
+    name = models.CharField(
+        max_length=32,
+    )
+    tenant = models.ForeignKey(
+        Group,
+        on_delete=models.CASCADE,
+    )
+    #TODO: INT coin_values[NUMBER_COIN_TYPES];
+    #TODO: WORD    coin_volumes[NUMBER_COIN_TYPES];
+    #TODO: BFLAGS  coin_val_parms[NUMBER_COIN_TYPES];
+    cash_box_volume = models.PositiveIntegerField(
+        validators=[
+            MaxValueValidator(65535),
+            OnlyNumbersValidator
+        ],
+        default=20800,
+        verbose_name='Cashbox Volume',
+    )
+    escrow_volume = models.PositiveIntegerField(
+        validators=[
+            MaxValueValidator(65535),
+            OnlyNumbersValidator
+        ],
+        default=600,
+        verbose_name='Escrow Volume',
+    )
+    cash_box_volume_threshold = models.PositiveIntegerField(
+        validators=[
+            MaxValueValidator(65535),
+            OnlyNumbersValidator
+        ],
+        default=16640,
+        verbose_name='Cashbox Volume Threshold',
+    )
+    cash_box_value_threshold = models.BigIntegerField(
+        validators=[
+            MinValueValidator(0),
+            MaxValueValidator(4294967295),
+            OnlyNumbersValidator
+        ],
+        default=25000,
+        verbose_name='Cashbox Value Threshold',
+    )
+    escrow_volume_threshold = models.PositiveIntegerField(
+        validators=[
+            MaxValueValidator(65535),
+            OnlyNumbersValidator
+        ],
+        default=600,
+        verbose_name='Escrow Volume Threshold',
+    )
+    escrow_value_threshold = models.BigIntegerField(
+        validators=[
+            MinValueValidator(0),
+            MaxValueValidator(4294967295),
+            OnlyNumbersValidator
+        ],
+        default=600,
+        verbose_name='Escrow Value Threshold',
+    )
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        unique_together = (('name', 'tenant'),)
+        verbose_name = 'Coin Validator Paramters'
+        verbose_name_plural = 'Coin Validator Paramters'
+
+class CoinValDefs(models.Model):
+    coinValTable = models.ForeignKey(
+        CoinValTable,
+    )
+    order = models.PositiveIntegerField()
+    coin_value = models.PositiveIntegerField(
+        validators=[
+            MaxValueValidator(65535),
+            OnlyNumbersValidator
+        ],
+        default=0,
+        verbose_name='Coin Value',
+    )
+    coin_volume = models.PositiveIntegerField(
+        validators=[
+            MaxValueValidator(65535),
+            OnlyNumbersValidator
+        ],
+        default=0,
+        verbose_name='Coin Volume',
+    )
+    coin_val_parms = MultiSelectField(
+        choices=(
+            ('01', 'Enable Coin Window'), # DLOG_CNVT_ENA_COIN_WIN
+            ('02', 'Accept Coin'), # DLOG_CNVT_ACCEPT_COIN
+        ),
+        null=True,
+        blank=True,
+        verbose_name='Coin Parameters',
+    )
+    
+    def __str__(self):
+        return 'Coin ' + str(self.order)
+
+    class Meta:
+        ordering = ('order',)
+        verbose_name = 'Coin Validator Coin Definition'
+        verbose_name_plural = 'Coin Validator Coin Definitions'
+
