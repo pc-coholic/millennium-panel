@@ -896,9 +896,9 @@ class CoinValTable(models.Model):
         Group,
         on_delete=models.CASCADE,
     )
-    #TODO: INT coin_values[NUMBER_COIN_TYPES];
-    #TODO: WORD    coin_volumes[NUMBER_COIN_TYPES];
-    #TODO: BFLAGS  coin_val_parms[NUMBER_COIN_TYPES];
+    #coin_values[] -> CoinValDefs
+    #coin_volumes[] -> CoinValDefs
+    #coin_val_parms]] -> CoinValDefs
     cash_box_volume = models.PositiveIntegerField(
         validators=[
             MaxValueValidator(65535),
@@ -997,3 +997,160 @@ class CoinValDefs(models.Model):
         verbose_name = 'Coin Validator Coin Definition'
         verbose_name_plural = 'Coin Validator Coin Definitions'
 
+class CardTable(models.Model):
+    name = models.CharField(
+        max_length=32,
+    )
+    tenant = models.ForeignKey(
+        Group,
+        on_delete=models.CASCADE,
+    )
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        unique_together = (('name', 'tenant'),)
+        verbose_name = 'Card Table'
+        verbose_name_plural = 'Card Tables'
+
+class CardDefs(models.Model):
+    cardTable = models.ForeignKey(
+        CardTable,
+    )
+    order = models.PositiveIntegerField()
+    pan_low = models.PositiveSmallIntegerField(
+        validators=[
+            MaxValueValidator(999999),
+            OnlyNumbersValidator,
+        ],
+        null=True,
+        blank=True,
+        verbose_name='Start of PAN-Range',
+        help_text='First six digits of card',
+    )
+    pan_high = models.PositiveSmallIntegerField(
+        validators=[
+            MaxValueValidator(999999),
+            OnlyNumbersValidator,
+        ],
+        null=True,
+        blank=True,
+        verbose_name='End of PAN-Range',
+        help_text='First six digits of card',
+    )
+    standard_id = models.PositiveSmallIntegerField(
+        choices=(
+            ('0', 'Not Set'), # DLOG_CTE_STDID_NOTSET 
+            ('1', 'MOD10'), # DLOG_CTE_STDID_MOD10
+            ('2', 'ANSI'), # DLOG_CTE_STDID_ANSI
+            ('3', 'ABA'), # DLOG_CTE_STDID_ABA
+            ('4', 'CBA'), # DLOG_CTE_STDID_CBA
+            ('5', 'BOC'), # DLOG_CTE_STDID_BOC
+            ('6', 'ANSI59'), # DLOG_CTE_STDID_ANSI59
+            ('7', 'CCIT'), # DLOG_CTE_STDID_CCITT
+        ),
+        null=True,
+        blank=True,
+        verbose_name='Card Verification Standard',
+    )
+    control_inf = MultiSelectField(
+        choices=(
+            ('01', 'Formatted Request'), # FORMATTED_REQUEST
+            ('01', 'Unformatted Request'), # UNFORMATTED_REQUEST
+            ('02', 'Positive Validation'), # POSITIVE_VALIDATION
+            ('04', 'NCC Validation Required'), # NCC_VALIDATION_REQUIRED
+            ('08', 'Calling card'), # CALLING_CARD
+            ('08', 'Not a calling card'), # NOT_CALLING_CARD
+            ('10', 'Early Card Specific Authorisation'), # EARLY_CARD_SPECIFIC_AUTH
+            ('10', 'Delayed Card Specific Authorisation'), # DELAYED_CARD_SPECIFIC_AUTH
+            ('20', 'Prompt for PIN'), # PROMPT_FOR_PIN
+            ('40', 'Prompt for Telco PIN'), # PROMPT_FOR_TELCO_PIN
+            ('80', 'Routing to ACCS'), # ROUTING_TO_ACCS
+        ),
+        null=True,
+        blank=True,
+        verbose_name='Control Information Flags',
+    )
+    expiry_date_pos = models.PositiveSmallIntegerField(
+        validators=[
+            MaxValueValidator(255),
+            OnlyNumbersValidator,
+        ],
+        null=True,
+        blank=True,
+        verbose_name='Position of Expiry Date',
+        help_text='Relative to 1st Field Separator',
+    )
+    initial_date_pos = models.PositiveSmallIntegerField(
+        validators=[
+            MaxValueValidator(255),
+            OnlyNumbersValidator,
+        ],
+        null=True,
+        blank=True,
+        verbose_name='Position of Issue Date',
+        help_text='Relative to 1st Field Separator',
+    )
+    discret_data_pos = models.PositiveSmallIntegerField(
+        validators=[
+            MaxValueValidator(255),
+            OnlyNumbersValidator,
+        ],
+        null=True,
+        blank=True,
+        verbose_name='Position of Discretionary Data',
+        help_text='Relative to 1st Field Separator',
+    )
+    #table_service_code
+    card_ref_num = models.PositiveSmallIntegerField(
+        validators=[
+            MaxValueValidator(255),
+            OnlyNumbersValidator,
+        ],
+        null=True,
+        blank=True,
+        verbose_name='Position of Language',
+        help_text='Relative to 1st Field Separator',
+    )
+    carrier_id = models.PositiveSmallIntegerField(
+        validators=[
+            MaxValueValidator(255),
+            OnlyNumbersValidator,
+        ],
+        null=True,
+        blank=True,
+        verbose_name='Carrier ID',
+    )
+    control_inf_1 = MultiSelectField(
+        choices=(
+            ('02', 'Reloadable Smart Card'), # RELOADABLE_SMART_CARD
+            ('04', 'SUMMARY_CARD_REQUIRED'), # SUMMARY_CARD_REQUIRED
+            ('08', 'Display remaining Credit'), # DISPLAY_CREDIT_REMAINING
+            ('10', 'Load-Only Magnetic Card'), # LOAD_ONLY_MAG_CARD
+        ),
+        null=True,
+        blank=True,
+        verbose_name='Control Information Flags',
+        help_text='MTR 2.x only',
+    )
+    bank_reload_ref = models.PositiveSmallIntegerField(
+        validators=[
+            MaxValueValidator(255),
+            OnlyNumbersValidator,
+        ],
+        null=True,
+        blank=True,
+        verbose_name='Bank Reload Reference',
+        help_text='MTR 2.x only',
+    )
+    lang_code = models.PositiveSmallIntegerField(
+        validators=[
+            MaxValueValidator(255),
+            OnlyNumbersValidator,
+        ],
+        null=True,
+        blank=True,
+        verbose_name='language code to spill to switch',
+        help_text='MTR 2.x only',
+    )

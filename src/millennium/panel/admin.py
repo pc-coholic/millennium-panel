@@ -70,7 +70,6 @@ class FconfigOptsAdmin(admin.ModelAdmin):
         obj.save()
 
 class CoinValDefsInline(SortableStackedInline):
-    #form = CoinValDefsInlineForm
     model = CoinValDefs
     sortable = 'order'
     suit_classes = 'suit-tab suit-tab-cities'
@@ -102,8 +101,36 @@ class CoinValTableAdmin(admin.ModelAdmin):
             obj.tenant = Group.objects.get(id=request.session['tenant'])
         obj.save()
 
+class CardDefsInline(SortableStackedInline):
+    model = CardDefs
+    sortable = 'order'
+    suit_classes = 'suit-tab suit-tab-cities'
+    suit_form_inlines_hide_original = True
+    max_num = 32
+
+class CardTableAdmin(admin.ModelAdmin):
+    exclude = ('tenant',)
+    list_display = ('name',)
+    inlines = (CardDefsInline,)
+
+    def get_queryset(self, request):
+        return CardTable.objects.filter(tenant=request.session['tenant'])
+
+    def has_change_permission(self, request, obj=None):
+        has_class_permission = super(CardTableAdmin, self).has_change_permission(request, obj)
+        if not has_class_permission:
+            return False
+        if obj is not None and obj.tenant != int(request.session['tenant']) and request.user.groups.filter(id=obj.tenant.id).exists() != True:
+           return False
+        return True
+
+    def save_model(self, request, obj, form, change):
+        if not change:
+            obj.tenant = Group.objects.get(id=request.session['tenant'])
+        obj.save()
 
 admin.site.register(NCCTermParms, NCCTermParmsAdmin)
 admin.site.register(InstallParms, InstallParmsAdmin)
 admin.site.register(FconfigOpts, FconfigOptsAdmin)
 admin.site.register(CoinValTable, CoinValTableAdmin)
+admin.site.register(CardTable, CardTableAdmin)
