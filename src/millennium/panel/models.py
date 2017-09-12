@@ -1103,6 +1103,310 @@ class CardDefs(models.Model):
         help_text='Relative to 1st Field Separator',
     )
     #table_service_code
+    service_code_1 = models.PositiveSmallIntegerField(
+        validators=[
+            MaxValueValidator(999),
+            OnlyNumbersValidator,
+        ],
+        null=True,
+        blank=True,
+        verbose_name='1st 3 Digit Service Code',
+        help_text='Magnetic Stripe Cards only',
+    )
+    service_code_2 = models.PositiveSmallIntegerField(
+        validators=[
+            MaxValueValidator(999),
+            OnlyNumbersValidator,
+        ],
+        null=True,
+        blank=True,
+        verbose_name='2nd 3 Digit Service Code',
+        help_text='Magnetic Stripe Cards only',
+    )
+    service_code_3 = models.PositiveSmallIntegerField(
+        validators=[
+            MaxValueValidator(999),
+            OnlyNumbersValidator,
+        ],
+        null=True,
+        blank=True,
+        verbose_name='3rd 3 Digit Service Code',
+        help_text='Magnetic Stripe Cards only',
+    )
+    service_code_4 = models.PositiveSmallIntegerField(
+        validators=[
+            MaxValueValidator(999),
+            OnlyNumbersValidator,
+        ],
+        null=True,
+        blank=True,
+        verbose_name='4th 3 Digit Service Code',
+        help_text='Magnetic Stripe Cards only',
+    )
+    service_code_5 = models.PositiveSmallIntegerField(
+        validators=[
+            MaxValueValidator(999),
+            OnlyNumbersValidator,
+        ],
+        null=True,
+        blank=True,
+        verbose_name='5th 3 Digit Service Code',
+        help_text='Magnetic Stripe Cards only',
+    )
+    service_code_6 = models.PositiveSmallIntegerField(
+        validators=[
+            MaxValueValidator(999),
+            OnlyNumbersValidator,
+        ],
+        null=True,
+        blank=True,
+        verbose_name='6th 3 Digit Service Code',
+        help_text='MTR 1.x only. Magnetic Stripe Cards only',
+    )
+    service_code_7 = models.PositiveSmallIntegerField(
+        validators=[
+            MaxValueValidator(999),
+            OnlyNumbersValidator,
+        ],
+        null=True,
+        blank=True,
+        verbose_name='7th 3 Digit Service Code',
+        help_text='MTR 1.x only. Magnetic Stripe Cards only',
+    )
+    service_code_8 = models.PositiveSmallIntegerField(
+        validators=[
+            MaxValueValidator(999),
+            OnlyNumbersValidator,
+        ],
+        null=True,
+        blank=True,
+        verbose_name='8th 3 Digit Service Code',
+        help_text='MTR 1.x only. Magnetic Stripe Cards only',
+    )
+    service_code_9 = models.PositiveSmallIntegerField(
+        validators=[
+            MaxValueValidator(999),
+            OnlyNumbersValidator,
+        ],
+        null=True,
+        blank=True,
+        verbose_name='9th 3 Digit Service Code',
+        help_text='MTR 1.x only. Magnetic Stripe Cards only',
+    )
+    service_code_10 = models.PositiveSmallIntegerField(
+        validators=[
+            MaxValueValidator(999),
+            OnlyNumbersValidator,
+        ],
+        null=True,
+        blank=True,
+        verbose_name='10th 3 Digit Service Code',
+        help_text='MTR 1.x only. Magnetic Stripe Cards only',
+    )
+    spill_string = models.CharField(
+        max_length=8,
+        null=True,
+        blank=True,
+        verbose_name='Spill String',
+        help_text='MTR 2.x only. Magnetic Stripe Cards only',
+    )
+    spill_term_char = models.CharField(
+        max_length=1,
+        null=True,
+        blank=True,
+        verbose_name='Terminating Character for Spill String',
+        help_text='MTR 2.x only. Magnetic Stripe Cards only',
+    )
+    disc_ptr = models.PositiveSmallIntegerField(
+        validators=[
+            MaxValueValidator(255),
+            OnlyNumbersValidator,
+        ],
+        null=True,
+        blank=True,
+        verbose_name='Index for discounted rate in smartcard-table',
+        help_text='MTR 2.x only. Magnetic Stripe Cards only',
+    )
+    check_digit_1 = models.PositiveSmallIntegerField(
+        validators=[
+            MaxValueValidator(255),
+            OnlyNumbersValidator,
+        ],
+        null=True,
+        blank=True,
+        verbose_name='1st Check Digit',
+        help_text='Smartcard only',
+    )
+    check_digit_2 = models.PositiveSmallIntegerField(
+        validators=[
+            MaxValueValidator(255),
+            OnlyNumbersValidator,
+        ],
+        null=True,
+        blank=True,
+        verbose_name='2nd Check Digit',
+        help_text='Smartcard only',
+    )
+    check_digit_3 = models.PositiveSmallIntegerField(
+        validators=[
+            MaxValueValidator(255),
+            OnlyNumbersValidator,
+        ],
+        null=True,
+        blank=True,
+        verbose_name='3rd Check Digit',
+        help_text='Smartcard only',
+    )
+    check_digit_4 = models.PositiveSmallIntegerField(
+        validators=[
+            MaxValueValidator(255),
+            OnlyNumbersValidator,
+        ],
+        null=True,
+        blank=True,
+        verbose_name='4th Check Digit',
+        help_text='Smartcard only',
+    )
+    check_digit_5 = models.PositiveSmallIntegerField(
+        validators=[
+            MaxValueValidator(255),
+            OnlyNumbersValidator,
+        ],
+        null=True,
+        blank=True,
+        verbose_name='5th Check Digit',
+        help_text='Smartcard only',
+    )
+    check_digit_6 = models.PositiveSmallIntegerField(
+        validators=[
+            MaxValueValidator(255),
+            OnlyNumbersValidator,
+        ],
+        null=True,
+        blank=True,
+        verbose_name='6th Check Digit',
+        help_text='Smartcard only',
+    )
+    check_value_1 = models.PositiveSmallIntegerField(
+        validators=[
+            MaxValueValidator(255),
+            OnlyNumbersValidator,
+        ],
+        null=True,
+        blank=True,
+        verbose_name='1st Check Value',
+        help_text='Smartcard only',
+    )
+    check_value_2 = models.PositiveSmallIntegerField(
+        validators=[
+            MaxValueValidator(255),
+            OnlyNumbersValidator,
+        ],
+        null=True,
+        blank=True,
+        verbose_name='2nd Check Value',
+        help_text='Smartcard only',
+    )
+    check_value_3 = models.PositiveSmallIntegerField(
+        validators=[
+            MaxValueValidator(255),
+            OnlyNumbersValidator,
+        ],
+        null=True,
+        blank=True,
+        verbose_name='3rd Check Value',
+        help_text='Smartcard only',
+    )
+    check_value_4 = models.PositiveSmallIntegerField(
+        validators=[
+            MaxValueValidator(255),
+            OnlyNumbersValidator,
+        ],
+        null=True,
+        blank=True,
+        verbose_name='4th Check Value',
+        help_text='Smartcard only',
+    )
+    check_value_5 = models.PositiveSmallIntegerField(
+        validators=[
+            MaxValueValidator(255),
+            OnlyNumbersValidator,
+        ],
+        null=True,
+        blank=True,
+        verbose_name='5th Check Value',
+        help_text='Smartcard only',
+    )
+    check_value_6 = models.PositiveSmallIntegerField(
+        validators=[
+            MaxValueValidator(255),
+            OnlyNumbersValidator,
+        ],
+        null=True,
+        blank=True,
+        verbose_name='6th Check Value',
+        help_text='Smartcard only',
+    )
+    manufacturer_1 = models.PositiveSmallIntegerField(
+        validators=[
+            MaxValueValidator(255),
+            OnlyNumbersValidator,
+        ],
+        null=True,
+        blank=True,
+        verbose_name='1st Manufacturer Value',
+        help_text='Smartcard only',
+    )
+    manufacturer_2 = models.PositiveSmallIntegerField(
+        validators=[
+            MaxValueValidator(255),
+            OnlyNumbersValidator,
+        ],
+        null=True,
+        blank=True,
+        verbose_name='2nd Manufacturer Value',
+        help_text='Smartcard only',
+    )
+    manufacturer_3 = models.PositiveSmallIntegerField(
+        validators=[
+            MaxValueValidator(255),
+            OnlyNumbersValidator,
+        ],
+        null=True,
+        blank=True,
+        verbose_name='3rd Manufacturer Value',
+        help_text='Smartcard only',
+    )
+    manufacturer_4 = models.PositiveSmallIntegerField(
+        validators=[
+            MaxValueValidator(255),
+            OnlyNumbersValidator,
+        ],
+        null=True,
+        blank=True,
+        verbose_name='4th Manufacturer Value',
+        help_text='Smartcard only',
+    )
+    manufacturer_5 = models.PositiveSmallIntegerField(
+        validators=[
+            MaxValueValidator(255),
+            OnlyNumbersValidator,
+        ],
+        null=True,
+        blank=True,
+        verbose_name='5th Manufacturer Value',
+        help_text='Smartcard only',
+    )
+    spare = models.PositiveSmallIntegerField(
+        validators=[
+            MaxValueValidator(255),
+            OnlyNumbersValidator,
+        ],
+        null=True,
+        blank=True,
+        verbose_name='MTR 1.x: Spare / MTR 2.x: Index for discounted rate in smartcard-table',
+        help_text='MTR1.x only'
+    )  
     card_ref_num = models.PositiveSmallIntegerField(
         validators=[
             MaxValueValidator(255),
