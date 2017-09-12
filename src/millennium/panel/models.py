@@ -5,10 +5,16 @@ from multiselectfield import MultiSelectField
 
 # Create your models here.
 
-OnlyNumbersValidator =  RegexValidator(
+OnlyNumbersValidator = RegexValidator(
     r'^[0-9]*$',
     'Only 0-9 are allowed.',
     'Invalid Number'
+)
+
+ServiceCodeValidator = RegexValidator(
+    r'^[125679][024][01234567]$',
+    'Please enter a valid Service Code',
+    'Invalid Service Code'
 )
 
 class NCCTermParms(models.Model):
@@ -1102,11 +1108,9 @@ class CardDefs(models.Model):
         verbose_name='Position of Discretionary Data',
         help_text='Relative to 1st Field Separator',
     )
-    #table_service_code
     service_code_1 = models.PositiveSmallIntegerField(
         validators=[
-            MaxValueValidator(999),
-            OnlyNumbersValidator,
+            ServiceCodeValidator,
         ],
         null=True,
         blank=True,
@@ -1115,8 +1119,7 @@ class CardDefs(models.Model):
     )
     service_code_2 = models.PositiveSmallIntegerField(
         validators=[
-            MaxValueValidator(999),
-            OnlyNumbersValidator,
+            ServiceCodeValidator,
         ],
         null=True,
         blank=True,
@@ -1125,8 +1128,7 @@ class CardDefs(models.Model):
     )
     service_code_3 = models.PositiveSmallIntegerField(
         validators=[
-            MaxValueValidator(999),
-            OnlyNumbersValidator,
+            ServiceCodeValidator,
         ],
         null=True,
         blank=True,
@@ -1135,8 +1137,7 @@ class CardDefs(models.Model):
     )
     service_code_4 = models.PositiveSmallIntegerField(
         validators=[
-            MaxValueValidator(999),
-            OnlyNumbersValidator,
+            ServiceCodeValidator,
         ],
         null=True,
         blank=True,
@@ -1145,8 +1146,7 @@ class CardDefs(models.Model):
     )
     service_code_5 = models.PositiveSmallIntegerField(
         validators=[
-            MaxValueValidator(999),
-            OnlyNumbersValidator,
+            ServiceCodeValidator,
         ],
         null=True,
         blank=True,
@@ -1155,8 +1155,7 @@ class CardDefs(models.Model):
     )
     service_code_6 = models.PositiveSmallIntegerField(
         validators=[
-            MaxValueValidator(999),
-            OnlyNumbersValidator,
+            ServiceCodeValidator,
         ],
         null=True,
         blank=True,
@@ -1165,8 +1164,7 @@ class CardDefs(models.Model):
     )
     service_code_7 = models.PositiveSmallIntegerField(
         validators=[
-            MaxValueValidator(999),
-            OnlyNumbersValidator,
+            ServiceCodeValidator,
         ],
         null=True,
         blank=True,
@@ -1175,8 +1173,7 @@ class CardDefs(models.Model):
     )
     service_code_8 = models.PositiveSmallIntegerField(
         validators=[
-            MaxValueValidator(999),
-            OnlyNumbersValidator,
+            ServiceCodeValidator,
         ],
         null=True,
         blank=True,
@@ -1185,8 +1182,7 @@ class CardDefs(models.Model):
     )
     service_code_9 = models.PositiveSmallIntegerField(
         validators=[
-            MaxValueValidator(999),
-            OnlyNumbersValidator,
+            ServiceCodeValidator,
         ],
         null=True,
         blank=True,
@@ -1195,8 +1191,7 @@ class CardDefs(models.Model):
     )
     service_code_10 = models.PositiveSmallIntegerField(
         validators=[
-            MaxValueValidator(999),
-            OnlyNumbersValidator,
+            ServiceCodeValidator,
         ],
         null=True,
         blank=True,
@@ -1458,3 +1453,11 @@ class CardDefs(models.Model):
         verbose_name='language code to spill to switch',
         help_text='MTR 2.x only',
     )
+    
+    def __str__(self):
+        return 'Card ' + str(self.order)
+
+    class Meta:
+        ordering = ('order',)
+        verbose_name = 'Card Definition'
+        verbose_name_plural = 'Card Definitions'
