@@ -106,6 +106,7 @@ class CardDefsInline(SortableStackedInline):
     sortable = 'order'
     suit_classes = 'suit-tab suit-tab-cities'
     suit_form_inlines_hide_original = True
+    extra = 0
     max_num = 32
 
 class CardTableAdmin(admin.ModelAdmin):
