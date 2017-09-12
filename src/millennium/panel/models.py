@@ -227,7 +227,7 @@ class FconfigOpts(models.Model):
         Group,
         on_delete=models.CASCADE,
     )
-    terminal_type = models.PositiveSmallIntegerField(
+    terminal_type = MultiSelectField(
         choices=(
             ('00', 'Unknwon Terminal Type'), # NULL_TERMINAL_TYPE
             ('01', 'Card Type Terminal'), # CARD_TERMINAL_TYPE
@@ -284,7 +284,7 @@ class FconfigOpts(models.Model):
         blank=True,
         verbose_name='ACCS-Mode/Info',
     )
-    incoming_call_mode = models.PositiveSmallIntegerField(
+    incoming_call_mode = MultiSelectField(
         choices=(
             ('0', 'Ringing disabled'), # RINGING_DISABLED
             ('1', 'Ringing / Incoming Voice'), # RINGING_INCOMING_VOICE
@@ -333,7 +333,7 @@ class FconfigOpts(models.Model):
         verbose_name='Incoming call rate',
         help_text='MTR1.x only'
     )
-    language_scrolling_order = models.PositiveSmallIntegerField(
+    language_scrolling_order = MultiSelectField(
         choices=(
             ('1', 'English'), # LANGUAGE_1
             ('2', 'French'), # LANGUAGE_2
@@ -355,7 +355,7 @@ class FconfigOpts(models.Model):
         verbose_name='Spare B',
         help_text='MTR1.x only'
     )
-    language_scrolling_order_2 = models.PositiveSmallIntegerField(
+    language_scrolling_order_2 = MultiSelectField(
         choices=(
             ('1', 'English'), # LANGUAGE_1
             ('2', 'French'), # LANGUAGE_2
@@ -377,7 +377,7 @@ class FconfigOpts(models.Model):
         verbose_name='Spare C',
         help_text='MTR1.x only'
     )
-    number_of_languages = models.PositiveSmallIntegerField(
+    number_of_languages = MultiSelectField(
         choices=(
             ('1', '1 Language'),
             ('2', '2 Languages'),
@@ -543,7 +543,7 @@ class FconfigOpts(models.Model):
         blank=True,
         verbose_name='Enable Advertising',
     )
-    default_language = models.PositiveSmallIntegerField(
+    default_language = MultiSelectField(
         choices=(
             ('1', 'English'), # LANGUAGE_1
             ('2', 'French'), # LANGUAGE_2
@@ -1039,7 +1039,7 @@ class CardDefs(models.Model):
         verbose_name='End of PAN-Range',
         help_text='First six digits of card',
     )
-    standard_id = models.PositiveSmallIntegerField(
+    standard_id = MultiSelectField(
         choices=(
             ('0', 'Not Set'), # DLOG_CTE_STDID_NOTSET 
             ('1', 'MOD10'), # DLOG_CTE_STDID_MOD10
