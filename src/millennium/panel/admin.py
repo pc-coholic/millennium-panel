@@ -159,6 +159,25 @@ class RateTableAdmin(admin.ModelAdmin):
             obj.tenant = Group.objects.get(id=request.session['tenant'])
         obj.save()
 
+class terminalAdmin(admin.ModelAdmin):
+    exclude = ('tenant',)
+    list_display = ('term_id',)
+
+    def get_queryset(self, request):
+        return terminal.objects.filter(tenant=request.session['tenant'])
+
+    def has_change_permission(self, request, obj=None):
+        has_class_permission = super(terminalAdmin, self).has_change_permission(request, obj)
+        if not has_class_permission:
+            return False
+        if obj is not None and obj.tenant != int(request.session['tenant']) and request.user.groups.filter(id=obj.tenant.id).exists() != True:
+           return False
+        return True
+
+    def save_model(self, request, obj, form, change):
+        if not change:
+            obj.tenant = Group.objects.get(id=request.session['tenant'])
+        obj.save()
 
 admin.site.register(NCCTermParms, NCCTermParmsAdmin)
 admin.site.register(InstallParms, InstallParmsAdmin)
@@ -166,3 +185,4 @@ admin.site.register(FconfigOpts, FconfigOptsAdmin)
 admin.site.register(CoinValTable, CoinValTableAdmin)
 admin.site.register(CardTable, CardTableAdmin)
 admin.site.register(RateTable, RateTableAdmin)
+admin.site.register(terminal, terminalAdmin)
