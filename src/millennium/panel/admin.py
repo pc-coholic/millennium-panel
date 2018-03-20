@@ -130,8 +130,39 @@ class CardTableAdmin(admin.ModelAdmin):
             obj.tenant = Group.objects.get(id=request.session['tenant'])
         obj.save()
 
+class RateDefsInline(SortableStackedInline):
+    model = RateDefs
+    sortable = 'order'
+    suit_classes = 'suit-tab suit-tab-cities'
+    suit_form_inlines_hide_original = True
+    extra = 0
+    max_num = 128
+
+class RateTableAdmin(admin.ModelAdmin):
+    exclude = ('tenant',)
+    list_display = ('name',)
+    inlines = (RateDefsInline,)
+
+    def get_queryset(self, request):
+        return RateTable.objects.filter(tenant=request.session['tenant'])
+
+    def has_change_permission(self, request, obj=None):
+        has_class_permission = super(RateTableAdmin, self).has_change_permission(request, obj)
+        if not has_class_permission:
+            return False
+        if obj is not None and obj.tenant != int(request.session['tenant']) and request.user.groups.filter(id=obj.tenant.id).exists() != True:
+           return False
+        return True
+
+    def save_model(self, request, obj, form, change):
+        if not change:
+            obj.tenant = Group.objects.get(id=request.session['tenant'])
+        obj.save()
+
+
 admin.site.register(NCCTermParms, NCCTermParmsAdmin)
 admin.site.register(InstallParms, InstallParmsAdmin)
 admin.site.register(FconfigOpts, FconfigOptsAdmin)
 admin.site.register(CoinValTable, CoinValTableAdmin)
 admin.site.register(CardTable, CardTableAdmin)
+admin.site.register(RateTable, RateTableAdmin)

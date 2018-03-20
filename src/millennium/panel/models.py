@@ -233,9 +233,9 @@ class FconfigOpts(models.Model):
         Group,
         on_delete=models.CASCADE,
     )
-    terminal_type = MultiSelectField(
+    terminal_type = models.PositiveSmallIntegerField(
         choices=(
-            ('00', 'Unknwon Terminal Type'), # NULL_TERMINAL_TYPE
+            ('00', 'Unknown Terminal Type'), # NULL_TERMINAL_TYPE
             ('01', 'Card Type Terminal'), # CARD_TERMINAL_TYPE
             ('02', 'Universal Type Terminal'), # UNIVERSAL_TERMINAL_TYPE
             ('03', 'Coin Terminal Type'), # COIN_TERMINAL_TYPE
@@ -290,7 +290,7 @@ class FconfigOpts(models.Model):
         blank=True,
         verbose_name='ACCS-Mode/Info',
     )
-    incoming_call_mode = MultiSelectField(
+    incoming_call_mode = models.PositiveSmallIntegerField(
         choices=(
             ('0', 'Ringing disabled'), # RINGING_DISABLED
             ('1', 'Ringing / Incoming Voice'), # RINGING_INCOMING_VOICE
@@ -339,7 +339,7 @@ class FconfigOpts(models.Model):
         verbose_name='Incoming call rate',
         help_text='MTR1.x only'
     )
-    language_scrolling_order = MultiSelectField(
+    language_scrolling_order = models.PositiveSmallIntegerField(
         choices=(
             ('1', 'English'), # LANGUAGE_1
             ('2', 'French'), # LANGUAGE_2
@@ -361,7 +361,7 @@ class FconfigOpts(models.Model):
         verbose_name='Spare B',
         help_text='MTR1.x only'
     )
-    language_scrolling_order_2 = MultiSelectField(
+    language_scrolling_order_2 = models.PositiveSmallIntegerField(
         choices=(
             ('1', 'English'), # LANGUAGE_1
             ('2', 'French'), # LANGUAGE_2
@@ -383,7 +383,7 @@ class FconfigOpts(models.Model):
         verbose_name='Spare C',
         help_text='MTR1.x only'
     )
-    number_of_languages = MultiSelectField(
+    number_of_languages = models.PositiveSmallIntegerField(
         choices=(
             ('1', '1 Language'),
             ('2', '2 Languages'),
@@ -549,7 +549,7 @@ class FconfigOpts(models.Model):
         blank=True,
         verbose_name='Enable Advertising',
     )
-    default_language = MultiSelectField(
+    default_language = models.PositiveSmallIntegerField(
         choices=(
             ('1', 'English'), # LANGUAGE_1
             ('2', 'French'), # LANGUAGE_2
@@ -893,7 +893,7 @@ class FconfigOpts(models.Model):
         unique_together = (('name', 'tenant'),)
         verbose_name = 'Feature Config & Call Options'
         verbose_name_plural = 'Feature Config & Call Options'
-  
+
 class CoinValTable(models.Model):
     name = models.CharField(
         max_length=32,
@@ -961,12 +961,13 @@ class CoinValTable(models.Model):
 
     class Meta:
         unique_together = (('name', 'tenant'),)
-        verbose_name = 'Coin Validator Paramters'
-        verbose_name_plural = 'Coin Validator Paramters'
+        verbose_name = 'Coin Validator parameters'
+        verbose_name_plural = 'Coin Validator parameters'
 
 class CoinValDefs(models.Model):
     coinValTable = models.ForeignKey(
         CoinValTable,
+        on_delete=models.CASCADE,
     )
     order = models.PositiveIntegerField()
     coin_value = models.PositiveIntegerField(
@@ -994,7 +995,7 @@ class CoinValDefs(models.Model):
         blank=True,
         verbose_name='Coin Parameters',
     )
-    
+
     def __str__(self):
         return 'Coin ' + str(self.order)
 
@@ -1023,6 +1024,7 @@ class CardTable(models.Model):
 class CardDefs(models.Model):
     cardTable = models.ForeignKey(
         CardTable,
+        on_delete=models.CASCADE,
     )
     order = models.PositiveIntegerField()
     pan_low = models.PositiveSmallIntegerField(
@@ -1045,9 +1047,9 @@ class CardDefs(models.Model):
         verbose_name='End of PAN-Range',
         help_text='First six digits of card',
     )
-    standard_id = MultiSelectField(
+    standard_id = models.PositiveSmallIntegerField(
         choices=(
-            ('0', 'Not Set'), # DLOG_CTE_STDID_NOTSET 
+            ('0', 'Not Set'), # DLOG_CTE_STDID_NOTSET
             ('1', 'MOD10'), # DLOG_CTE_STDID_MOD10
             ('2', 'ANSI'), # DLOG_CTE_STDID_ANSI
             ('3', 'ABA'), # DLOG_CTE_STDID_ABA
@@ -1401,7 +1403,7 @@ class CardDefs(models.Model):
         blank=True,
         verbose_name='MTR 1.x: Spare / MTR 2.x: Index for discounted rate in smartcard-table',
         help_text='MTR1.x only'
-    )  
+    )
     card_ref_num = models.PositiveSmallIntegerField(
         validators=[
             MaxValueValidator(255),
@@ -1453,7 +1455,7 @@ class CardDefs(models.Model):
         verbose_name='language code to spill to switch',
         help_text='MTR 2.x only',
     )
-    
+
     def __str__(self):
         return 'Card ' + str(self.order)
 
@@ -1461,3 +1463,104 @@ class CardDefs(models.Model):
         ordering = ('order',)
         verbose_name = 'Card Definition'
         verbose_name_plural = 'Card Definitions'
+
+class RateTable(models.Model):
+    name = models.CharField(
+        max_length=32,
+    )
+    tenant = models.ForeignKey(
+        Group,
+        on_delete=models.CASCADE,
+    )
+    effective_date = models.DateTimeField(
+        verbose_name='Effictive Date'
+    )
+    telco = models.PositiveSmallIntegerField(
+        validators=[
+            MaxValueValidator(255),
+            OnlyNumbersValidator,
+        ],
+        verbose_name='Telco'
+        )
+    spare = models.CharField(
+        max_length=32,
+        validators=[
+            OnlyNumbersValidator,
+        ],
+        null=True,
+        blank=True,
+        verbose_name='Spare',
+    )
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        unique_together = (('name', 'tenant'),)
+        verbose_name = 'Rate Table'
+        verbose_name_plural = 'Rate Tables'
+
+class RateDefs(models.Model):
+    rateTable = models.ForeignKey(
+        RateTable,
+        on_delete=models.CASCADE,
+    )
+    order = models.PositiveIntegerField()
+    rate_info = models.PositiveSmallIntegerField(
+        choices=(
+            ('0', 'NCC rated intralata'), # DLOG_RT_NCC_RATED_INTRA
+            ('1', 'LMS rate - local'), # DLOG_RT_LMS_RATE
+            ('2', 'Fixed charge - local'), # DLOG_RT_FIXED_CHARGE
+            ('3', 'Rate not available'), # DLOG_RT_RATE_NA
+            ('4', 'Invalid NPA/NXX'), # DLOG_RT_INV_NPA_NXX
+            ('5', 'Toll intralata'), # DLOG_RT_TOLL_INTRALATA
+            ('6', 'Toll interlata'), # DLOG_RT_TOLL_INTERLATA
+            ('7', 'NCC rated interlata'), # DLOG_RT_NCC_RATED_INTER
+            ('8', 'NCC rated local'), # DLOG_RT_NCC_RATED_LOCAL
+            ('9', 'Toll international'), # DLOG_RT_TOLL_INTERNATIONAL, MTR2.x only
+        ),
+        null=True,
+        blank=True,
+        verbose_name='Rate Information',
+        help_text='Toll international only available on MTR2.x'
+    )
+    initial_period = models.PositiveIntegerField(
+        validators=[
+            MaxValueValidator(65535),
+            OnlyNumbersValidator
+        ],
+        verbose_name='Initial period',
+        help_text='0 equals indefinite duration'
+    )
+    initial_charge = models.PositiveIntegerField(
+        validators=[
+            MaxValueValidator(65535),
+            OnlyNumbersValidator
+        ],
+        verbose_name='Charge for initial period',
+        help_text='in Cents'
+    )
+    additional_period = models.PositiveIntegerField(
+        validators=[
+            MaxValueValidator(65535),
+            OnlyNumbersValidator
+        ],
+        verbose_name='Additional period',
+        help_text='0 equals indefinite duration'
+    )
+    additional_charge = models.PositiveIntegerField(
+        validators=[
+            MaxValueValidator(65535),
+            OnlyNumbersValidator
+        ],
+        verbose_name='Charge for every additional period',
+        help_text='in Cents'
+    )
+
+    def __str__(self):
+        return 'Rate ' + str(self.order)
+
+    class Meta:
+        ordering = ('order',)
+        verbose_name = 'Rate Definition'
+        verbose_name_plural = 'Rate Definitions'
