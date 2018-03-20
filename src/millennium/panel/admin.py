@@ -161,7 +161,7 @@ class RateTableAdmin(admin.ModelAdmin):
 
 class terminalAdmin(admin.ModelAdmin):
     exclude = ('tenant',)
-    list_display = ('term_id',)
+    list_display = ('term_id', 'NCCTermParms', 'InstallParms', 'FconfigOpts', 'CoinValTable', 'CardTable', 'RateTable')
 
     def get_queryset(self, request):
         return terminal.objects.filter(tenant=request.session['tenant'])
