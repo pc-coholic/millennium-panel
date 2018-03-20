@@ -44,7 +44,7 @@ class CardDefs(models.Model):
         verbose_name='End of PAN-Range',
         help_text='First six digits of card',
     )
-    standard_id = models.PositiveSmallIntegerField(
+    standard_id = models.CharField(
         choices=(
             ('0', 'Not Set'), # DLOG_CTE_STDID_NOTSET
             ('1', 'MOD10'), # DLOG_CTE_STDID_MOD10
@@ -55,6 +55,7 @@ class CardDefs(models.Model):
             ('6', 'ANSI59'), # DLOG_CTE_STDID_ANSI59
             ('7', 'CCIT'), # DLOG_CTE_STDID_CCITT
         ),
+        max_length=1,
         null=True,
         blank=True,
         verbose_name='Card Verification Standard',

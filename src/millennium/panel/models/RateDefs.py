@@ -24,7 +24,7 @@ class RateDefs(models.Model):
         on_delete=models.CASCADE,
     )
     order = models.PositiveIntegerField()
-    rate_info = models.PositiveSmallIntegerField(
+    rate_info = models.CharField(
         choices=(
             ('0', 'NCC rated intralata'), # DLOG_RT_NCC_RATED_INTRA
             ('1', 'LMS rate - local'), # DLOG_RT_LMS_RATE
@@ -39,6 +39,7 @@ class RateDefs(models.Model):
         ),
         null=True,
         blank=True,
+        max_length=1,
         verbose_name='Rate Information',
         help_text='Toll international only available on MTR2.x'
     )

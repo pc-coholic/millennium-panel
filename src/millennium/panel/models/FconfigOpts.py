@@ -25,7 +25,7 @@ class FconfigOpts(models.Model):
         Group,
         on_delete=models.CASCADE,
     )
-    terminal_type = models.PositiveSmallIntegerField(
+    terminal_type = models.CharField(
         choices=(
             ('00', 'Unknown Terminal Type'), # NULL_TERMINAL_TYPE
             ('01', 'Card Type Terminal'), # CARD_TERMINAL_TYPE
@@ -35,6 +35,7 @@ class FconfigOpts(models.Model):
             ('10', 'Smart Card Terminal Type'), # SMART_CARD_TERMINAL_TYPE
         ),
         default='02',
+        max_length=2,
         verbose_name='Terminal Type',
     )
     display_present = models.BooleanField(
@@ -82,7 +83,7 @@ class FconfigOpts(models.Model):
         blank=True,
         verbose_name='ACCS-Mode/Info',
     )
-    incoming_call_mode = models.PositiveSmallIntegerField(
+    incoming_call_mode = models.CharField(
         choices=(
             ('0', 'Ringing disabled'), # RINGING_DISABLED
             ('1', 'Ringing / Incoming Voice'), # RINGING_INCOMING_VOICE
@@ -90,6 +91,7 @@ class FconfigOpts(models.Model):
             ('3', 'Ringing / Voice / Delayed Data Call'), # RINGING_DELAYED_DATA_CALL
         ),
         default='1',
+        max_length=2,
         verbose_name='Incoming Call mode',
     )
     incoming_call_anti_fraud = MultiSelectField(
@@ -131,7 +133,7 @@ class FconfigOpts(models.Model):
         verbose_name='Incoming call rate',
         help_text='MTR1.x only'
     )
-    language_scrolling_order = models.PositiveSmallIntegerField(
+    language_scrolling_order = models.CharField(
         choices=(
             ('1', 'English'), # LANGUAGE_1
             ('2', 'French'), # LANGUAGE_2
@@ -139,6 +141,7 @@ class FconfigOpts(models.Model):
             ('4', 'Japanese'), # LANGUAGE_4
         ),
         default='1',
+        max_length=1,
         verbose_name='Language Scrolling Order - 1st language',
         help_text='MTR 2.x only'
     )
@@ -153,7 +156,7 @@ class FconfigOpts(models.Model):
         verbose_name='Spare B',
         help_text='MTR1.x only'
     )
-    language_scrolling_order_2 = models.PositiveSmallIntegerField(
+    language_scrolling_order_2 = models.CharField(
         choices=(
             ('1', 'English'), # LANGUAGE_1
             ('2', 'French'), # LANGUAGE_2
@@ -161,6 +164,7 @@ class FconfigOpts(models.Model):
             ('4', 'Japanese'), # LANGUAGE_4
         ),
         default='2',
+        max_length=1,
         verbose_name='Language Scrolling Order - 2nd language',
         help_text='MTR 2.x only'
     )
@@ -175,7 +179,7 @@ class FconfigOpts(models.Model):
         verbose_name='Spare C',
         help_text='MTR1.x only'
     )
-    number_of_languages = models.PositiveSmallIntegerField(
+    number_of_languages = models.CharField(
         choices=(
             ('1', '1 Language'),
             ('2', '2 Languages'),
@@ -183,6 +187,7 @@ class FconfigOpts(models.Model):
             ('4', '4 Languages (MTR 2.x only)'),
         ),
         default='2',
+        max_length=1,
         verbose_name='Number of Languages',
         help_text='MTR2.x only'
     )
@@ -341,7 +346,7 @@ class FconfigOpts(models.Model):
         blank=True,
         verbose_name='Enable Advertising',
     )
-    default_language = models.PositiveSmallIntegerField(
+    default_language = models.CharField(
         choices=(
             ('1', 'English'), # LANGUAGE_1
             ('2', 'French'), # LANGUAGE_2
@@ -349,6 +354,7 @@ class FconfigOpts(models.Model):
             ('4', 'Japanese'), # LANGUAGE_4
         ),
         default='1',
+        max_length=1,
         verbose_name='Default Language',
     )
 
