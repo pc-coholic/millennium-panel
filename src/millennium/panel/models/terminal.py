@@ -8,7 +8,7 @@ from .FconfigOpts import FconfigOpts
 from .CoinValTable import CoinValTable
 from .CardTable import CardTable
 from .RateTable import RateTable
-
+from .NPANXXTable import NPANXXTable
 # Create your models here.
 
 OnlyNumbersValidator = RegexValidator(
@@ -67,6 +67,12 @@ class terminal(models.Model):
         on_delete=models.CASCADE,
         verbose_name=RateTable._meta.verbose_name_raw
     )
+    NPANXXTable = models.ForeignKey(
+        NPANXXTable,
+        on_delete=models.CASCADE,
+        verbose_name=NPANXXTable._meta.verbose_name_raw
+    )
+
     def __str__(self):
         return self.term_id
 

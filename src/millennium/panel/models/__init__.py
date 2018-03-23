@@ -7,4 +7,5 @@ from .CardTable import CardTable
 from .CardDefs import CardDefs
 from .RateTable import RateTable
 from .RateDefs import RateDefs
+from .NPANXXTable import NPANXXTable
 from .terminal import terminal
