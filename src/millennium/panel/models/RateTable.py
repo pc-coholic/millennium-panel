@@ -26,7 +26,7 @@ class RateTable(models.Model):
         on_delete=models.CASCADE,
     )
     effective_date = models.DateTimeField(
-        verbose_name='Effictive Date'
+        verbose_name='Effective Date'
     )
     telco = models.PositiveSmallIntegerField(
         validators=[
