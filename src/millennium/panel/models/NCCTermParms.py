@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import Group
 from django.core.validators import MinLengthValidator, MaxLengthValidator, RegexValidator, MinValueValidator, MaxValueValidator
 from multiselectfield import MultiSelectField
+from millennium.panel.framehelpers import mmHextel
 
 # Create your models here.
 
@@ -64,10 +65,23 @@ class NCCTermParms(models.Model):
         verbose_name='CPE ID',
         help_text='MTR 2.x only',
     )
-    # spare[14] MTR 2.x only
+    # TODO: spare[14] MTR 2.x only
 
     def __str__(self):
         return self.name
+
+    def getFrame(self, MTRconfig, termId):
+        outframe = [0x15]
+        outframe.extend(mmHextel(termId, MTRconfig['NCC_TERM_SIZE']))
+        outframe.extend(mmHextel(self.datapac_num, MTRconfig['NA_LDIST_TEL_NUM_LEN']))
+        outframe.extend(mmHextel(self.alt_datapac_num, MTRconfig['NA_LDIST_TEL_NUM_LEN']))
+
+        if MTRconfig['MTR'] is 2:
+            outframe.extend(mmHextel(self.cad_id, 4))
+            outframe.extend(mmHextel(self.cpe_id, 4))
+            # TODO: spare[14]
+
+        return(outframe)
 
     class Meta:
         unique_together = (('name', 'tenant'),)

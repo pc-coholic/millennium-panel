@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import Group
 from django.core.validators import MinLengthValidator, MaxLengthValidator, RegexValidator, MinValueValidator, MaxValueValidator
 from multiselectfield import MultiSelectField
+from millennium.panel.framehelpers import mmByte, mmWord, mmFlags, mmHextel
 
 # Create your models here.
 
@@ -83,15 +84,14 @@ class FconfigOpts(models.Model):
         blank=True,
         verbose_name='ACCS-Mode/Info',
     )
-    incoming_call_mode = models.CharField(
+    incoming_call_mode = models.PositiveSmallIntegerField(
         choices=(
-            ('0', 'Ringing disabled'), # RINGING_DISABLED
-            ('1', 'Ringing / Incoming Voice'), # RINGING_INCOMING_VOICE
-            ('2', 'No Ringing / Data Call'), # NO_RINGING_DATA_CALL
-            ('3', 'Ringing / Voice / Delayed Data Call'), # RINGING_DELAYED_DATA_CALL
+            (0, 'Ringing disabled'), # RINGING_DISABLED
+            (1, 'Ringing / Incoming Voice'), # RINGING_INCOMING_VOICE
+            (2, 'No Ringing / Data Call'), # NO_RINGING_DATA_CALL
+            (3, 'Ringing / Voice / Delayed Data Call'), # RINGING_DELAYED_DATA_CALL
         ),
-        default='1',
-        max_length=2,
+        default=1,
         verbose_name='Incoming Call mode',
     )
     incoming_call_anti_fraud = MultiSelectField(
@@ -133,15 +133,14 @@ class FconfigOpts(models.Model):
         verbose_name='Incoming call rate',
         help_text='MTR1.x only'
     )
-    language_scrolling_order = models.CharField(
+    language_scrolling_order = models.PositiveSmallIntegerField(
         choices=(
-            ('1', 'English'), # LANGUAGE_1
-            ('2', 'French'), # LANGUAGE_2
-            ('3', 'Spanish'), # LANGUAGE_3
-            ('4', 'Japanese'), # LANGUAGE_4
+            (1, 'English'), # LANGUAGE_1
+            (2, 'French'), # LANGUAGE_2
+            (3, 'Spanish'), # LANGUAGE_3
+            (4, 'Japanese'), # LANGUAGE_4
         ),
-        default='1',
-        max_length=1,
+        default=1,
         verbose_name='Language Scrolling Order - 1st language',
         help_text='MTR 2.x only'
     )
@@ -156,15 +155,14 @@ class FconfigOpts(models.Model):
         verbose_name='Spare B',
         help_text='MTR1.x only'
     )
-    language_scrolling_order_2 = models.CharField(
+    language_scrolling_order_2 = models.PositiveSmallIntegerField(
         choices=(
-            ('1', 'English'), # LANGUAGE_1
-            ('2', 'French'), # LANGUAGE_2
-            ('3', 'Spanish'), # LANGUAGE_3
-            ('4', 'Japanese'), # LANGUAGE_4
+            (1, 'English'), # LANGUAGE_1
+            (2, 'French'), # LANGUAGE_2
+            (3, 'Spanish'), # LANGUAGE_3
+            (4, 'Japanese'), # LANGUAGE_4
         ),
-        default='2',
-        max_length=1,
+        default=2,
         verbose_name='Language Scrolling Order - 2nd language',
         help_text='MTR 2.x only'
     )
@@ -179,15 +177,14 @@ class FconfigOpts(models.Model):
         verbose_name='Spare C',
         help_text='MTR1.x only'
     )
-    number_of_languages = models.CharField(
+    number_of_languages = models.PositiveSmallIntegerField(
         choices=(
-            ('1', '1 Language'),
-            ('2', '2 Languages'),
-            ('3', '3 Languages (MTR 2.x only)'),
-            ('4', '4 Languages (MTR 2.x only)'),
+            (1, '1 Language'),
+            (2, '2 Languages'),
+            (3, '3 Languages (MTR 2.x only)'),
+            (4, '4 Languages (MTR 2.x only)'),
         ),
-        default='2',
-        max_length=1,
+        default=2,
         verbose_name='Number of Languages',
         help_text='MTR2.x only'
     )
@@ -346,15 +343,14 @@ class FconfigOpts(models.Model):
         blank=True,
         verbose_name='Enable Advertising',
     )
-    default_language = models.CharField(
+    default_language = models.PositiveSmallIntegerField(
         choices=(
-            ('1', 'English'), # LANGUAGE_1
-            ('2', 'French'), # LANGUAGE_2
-            ('3', 'Spanish'), # LANGUAGE_3
-            ('4', 'Japanese'), # LANGUAGE_4
+            (0, 'English'), # LANGUAGE_1
+            (1, 'French'), # LANGUAGE_2
+            (2, 'Spanish'), # LANGUAGE_3
+            (3, 'Japanese'), # LANGUAGE_4
         ),
-        default='1',
-        max_length=1,
+        default=1,
         verbose_name='Default Language',
     )
 
@@ -686,6 +682,84 @@ class FconfigOpts(models.Model):
 
     def __str__(self):
         return self.name
+
+    def getFrame(self, MTRconfig):
+        outframe = [0x1A]
+        outframe.extend(mmByte(self.terminal_type))
+        outframe.extend(mmByte(self.display_present))
+        outframe.extend(mmByte(self.num_call_follow_on))
+        outframe.extend(mmFlags(self.card_validation_info))
+        outframe.extend(mmFlags(self.accs_info))
+        outframe.extend(mmByte(self.incoming_call_mode))
+        outframe.extend(mmFlags(self.incoming_call_anti_fraud))
+        outframe.extend(mmFlags(self.oos_pots_flags))
+        outframe.extend(mmByte(self.data_jack_visual_display))
+
+        if MTRconfig['MTR'] is 1:
+            outframe.extend(mmByte(self.incoming_call_rate))
+            outframe.extend(mmByte(self.spareB))
+            outframe.extend(mmByte(self.spareC))
+            outframe.extend(mmByte(self.spareD))
+            outframe.extend(mmByte(self.spareE))
+            outframe.extend(mmByte(self.spareF))
+            outframe.extend(mmHextel(self.aos_number, MTRconfig['NA_LDIST_TEL_NUM_LEN']))
+        elif MTRconfig['MTR'] is 2:
+            outframe.extend(mmByte(self.language_scrolling_order))
+            outframe.extend(mmByte(self.language_scrolling_order_2))
+            outframe.extend(mmByte(self.number_of_languages))
+            outframe.extend(mmFlags(self.rating_flags))
+            outframe.extend(mmByte(self.dial_around_timer))
+            outframe.extend(mmByte(self.opr_interntl_access_ptr))
+            outframe.extend(mmByte(self.aos_interlata_access))
+            outframe.extend(mmByte(self.aos_interntl_access))
+            outframe.extend(mmByte(self.djack_grace_before_collect))
+            outframe.extend(mmByte(self.opr_collection_tmr))
+            outframe.extend(mmByte(self.opr_intralata_access_ptr))
+            outframe.extend(mmByte(self.opr_interlata_access_ptr))
+
+        outframe.extend(mmFlags(self.advert_enable))
+        outframe.extend(mmByte(self.default_language))
+        outframe.extend(mmFlags(self.display_called_number))
+        outframe.extend(mmByte(self.dtmf_duration))
+        outframe.extend(mmByte(self.inter_digit_pause))
+        outframe.extend(mmFlags(self.dialing_conversion))
+        outframe.extend(mmFlags(self.coin_call_features))
+        outframe.extend(mmWord(self.coin_call_overtime_period))
+        outframe.extend(mmWord(self.coin_call_pots_time))
+        outframe.extend(mmByte(self.min_international_digits))
+        outframe.extend(mmByte(self.def_rate_req_payment))
+        outframe.extend(mmByte(self.next_call_revalidation_freq))
+        outframe.extend(mmByte(self.cutoff_on_disconnect_duration))
+        outframe.extend(mmWord(self.cdr_upload_timer_int))
+        outframe.extend(mmWord(self.cdr_upload_timer_nonint))
+        outframe.extend(mmByte(self.perf_stats_dialog_fails))
+        outframe.extend(mmByte(self.co_line_check_fails))
+        outframe.extend(mmByte(self.alt_ncc_dialog_fails))
+        outframe.extend(mmByte(self.dialog_fails_till_oos))
+        outframe.extend(mmByte(self.dialog_fails_till_alarm))
+        outframe.extend(mmFlags(self.smart_card_flags))
+        outframe.extend(mmByte(self.max_man_card_dig))
+        outframe.extend(mmByte(self.aos_intra_access_ptr))
+        outframe.extend(mmByte(self.carrier_reroute_flags))
+        outframe.extend(mmByte(self.min_man_card_dig))
+        outframe.extend(mmByte(self.max_smart_card_inserts))
+        outframe.extend(mmByte(self.max_diff_smart_card_inserts))
+        outframe.extend(mmByte(self.aos_operator_access_ptr))
+        outframe.extend(mmByte(self.data_jack_flags))
+        outframe.extend(mmWord(self.onhook_alarm_delay))
+        outframe.extend(mmWord(self.post_onhook_alarm_delay))
+        outframe.extend(mmWord(self.card_alarm_duration))
+        outframe.extend(mmWord(self.alarm_cadence_on_timer))
+        outframe.extend(mmWord(self.alarm_cadence_off_timer))
+        outframe.extend(mmWord(self.cardrdr_blocked_alarm_delay))
+        outframe.extend(mmByte(self.settle_time))
+        outframe.extend(mmByte(self.grace_period_domestic))
+        outframe.extend(mmByte(self.ias_timeout))
+        outframe.extend(mmByte(self.grace_period_international))
+        outframe.extend(mmByte(self.settle_time_datajack))
+
+        return(outframe)
+
 
     class Meta:
         unique_together = (('name', 'tenant'),)

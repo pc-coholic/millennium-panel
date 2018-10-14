@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import Group
 from django.core.validators import MinLengthValidator, MaxLengthValidator, RegexValidator, MinValueValidator, MaxValueValidator
 from multiselectfield import MultiSelectField
+from millennium.panel.framehelpers import mmByte, mmBCD, mmHextel, mmFlags, mmWord
 
 # Create your models here.
 
@@ -162,6 +163,33 @@ class InstallParms(models.Model):
 
     def __str__(self):
         return self.name
+
+    def getFrame(self, MTRconfig):
+        outframe = [0x1F]
+        outframe.extend(mmBCD(self.access_code, MTRconfig['ACCESS_CODE_SIZE']))
+        outframe.extend(mmHextel(self.key_card_num, MTRconfig['KEY_CARD_LEN']))
+        outframe.extend(mmFlags(self.install_servicing_flags))
+        outframe.extend(mmByte(self.tx_pkt_delay))
+        outframe.extend(mmByte(self.rx_pkt_gap))
+        outframe.extend(mmByte(self.retries_till_oos))
+
+        if MTRconfig['MTR'] is 1:
+            outframe.extend(mmByte(0)) #outframe.extend(mmByte(self.spare_2)) # TODO: spare
+        elif MTRconfig['MTR'] is 2:
+            outframe.extend(mmFlags(self.coin_servicing))
+
+        outframe.extend(mmWord(self.coin_box_lock_timeout))
+        outframe.extend(mmHextel(self.predial_string, MTRconfig['PREDIAL_STRING_LEN']))
+        outframe.extend(mmHextel(self.alt_predial_string, MTRconfig['PREDIAL_STRING_LEN']))
+
+        if MTRconfig['MTR'] is 1:
+            outframe.extend(mmHextel('0', MTRconfig['DLOG_SP_INSTALL_PARMS'])) # TODO: spare
+        elif MTRconfig['MTR'] is 2:
+            outframe.extend(mmHextel(self.analog_mode_prefix, MTRconfig['AMP_STRING_LEN']))
+            outframe.extend(mmFlags(self.comm_saving_flags))
+            outframe.extend(mmHextel('0', MTRconfig['DLOG_SP_INSTALL_PARMS'])) # TODO: spare
+
+        return outframe
 
     class Meta:
         unique_together = (('name', 'tenant'),)
