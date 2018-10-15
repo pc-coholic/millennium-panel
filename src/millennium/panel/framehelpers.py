@@ -39,19 +39,33 @@ def mmWord(item):
     item = bytearray.fromhex("".join([item[i:i+2] for i in range(0, len(item), 2)][::-1]))
     return item
 
+def mmLong(item):
+    item = hex(item)[2:]
+
+    item = item.zfill(8)
+
+    item = bytearray.fromhex("".join([item[i:i+2] for i in range(0, len(item), 2)][::-1]))
+    return item
+
 def mmFlags(item):
     return [sum(map(int, item))]
 
-def mmBCD(number, max = None):
+def mmBCD(number, max = None, finalE = False):
+    if isinstance(number, int):
+        number = str(number)
+
     number = mmHextel(number, max)
 
-    end = hex(number[-1])[2:]
+    if finalE:
+        end = hex(number[-1])[2:]
 
-    if end[-1] is '0':
-        end = end[0] + 'E'
+        if end[-1] is '0':
+            end = end[0] + 'E'
 
-    del number[-1]
-    return number + bytearray.fromhex(end)
+        del number[-1]
+        number = number + bytearray.fromhex(end)
+        
+    return number
 
 def mmHextel(number, max = None):
     if number is None:

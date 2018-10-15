@@ -166,7 +166,7 @@ class InstallParms(models.Model):
 
     def getFrame(self, MTRconfig):
         outframe = [0x1F]
-        outframe.extend(mmBCD(self.access_code, MTRconfig['ACCESS_CODE_SIZE']))
+        outframe.extend(mmBCD(self.access_code, MTRconfig['ACCESS_CODE_SIZE'], True))
         outframe.extend(mmHextel(self.key_card_num, MTRconfig['KEY_CARD_LEN']))
         outframe.extend(mmFlags(self.install_servicing_flags))
         outframe.extend(mmByte(self.tx_pkt_delay))

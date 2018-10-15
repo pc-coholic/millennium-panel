@@ -722,7 +722,12 @@ class FconfigOpts(models.Model):
         outframe.extend(mmFlags(self.display_called_number))
         outframe.extend(mmByte(self.dtmf_duration))
         outframe.extend(mmByte(self.inter_digit_pause))
-        outframe.extend(mmFlags(self.dialing_conversion))
+
+        if MTRconfig['MTR'] is 1:
+            outframe.extend(mmFlags(self.dialing_conversion))
+        elif MTRconfig['MTR'] is 2:
+            outframe.extend(mmByte(self.ppu_pre_auth_credit_limit))
+
         outframe.extend(mmFlags(self.coin_call_features))
         outframe.extend(mmWord(self.coin_call_overtime_period))
         outframe.extend(mmWord(self.coin_call_pots_time))

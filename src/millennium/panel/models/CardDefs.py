@@ -44,18 +44,17 @@ class CardDefs(models.Model):
         verbose_name='End of PAN-Range',
         help_text='First six digits of card',
     )
-    standard_id = models.CharField(
+    standard_id = models.PositiveSmallIntegerField(
         choices=(
-            ('0', 'Not Set'), # DLOG_CTE_STDID_NOTSET
-            ('1', 'MOD10'), # DLOG_CTE_STDID_MOD10
-            ('2', 'ANSI'), # DLOG_CTE_STDID_ANSI
-            ('3', 'ABA'), # DLOG_CTE_STDID_ABA
-            ('4', 'CBA'), # DLOG_CTE_STDID_CBA
-            ('5', 'BOC'), # DLOG_CTE_STDID_BOC
-            ('6', 'ANSI59'), # DLOG_CTE_STDID_ANSI59
-            ('7', 'CCIT'), # DLOG_CTE_STDID_CCITT
+            (0, 'Not Set'), # DLOG_CTE_STDID_NOTSET
+            (1, 'MOD10'), # DLOG_CTE_STDID_MOD10
+            (2, 'ANSI'), # DLOG_CTE_STDID_ANSI
+            (3, 'ABA'), # DLOG_CTE_STDID_ABA
+            (4, 'CBA'), # DLOG_CTE_STDID_CBA
+            (5, 'BOC'), # DLOG_CTE_STDID_BOC
+            (6, 'ANSI59'), # DLOG_CTE_STDID_ANSI59
+            (7, 'CCIT'), # DLOG_CTE_STDID_CCITT
         ),
-        max_length=1,
         null=True,
         blank=True,
         verbose_name='Card Verification Standard',
@@ -68,11 +67,11 @@ class CardDefs(models.Model):
             ('04', 'NCC Validation Required'), # NCC_VALIDATION_REQUIRED
             ('08', 'Calling card'), # CALLING_CARD
             ('08', 'Not a calling card'), # NOT_CALLING_CARD
-            ('10', 'Early Card Specific Authorisation'), # EARLY_CARD_SPECIFIC_AUTH
-            ('10', 'Delayed Card Specific Authorisation'), # DELAYED_CARD_SPECIFIC_AUTH
-            ('20', 'Prompt for PIN'), # PROMPT_FOR_PIN
-            ('40', 'Prompt for Telco PIN'), # PROMPT_FOR_TELCO_PIN
-            ('80', 'Routing to ACCS'), # ROUTING_TO_ACCS
+            ('16', 'Early Card Specific Authorisation'), # EARLY_CARD_SPECIFIC_AUTH
+            ('16', 'Delayed Card Specific Authorisation'), # DELAYED_CARD_SPECIFIC_AUTH
+            ('32', 'Prompt for PIN'), # PROMPT_FOR_PIN
+            ('64', 'Prompt for Telco PIN'), # PROMPT_FOR_TELCO_PIN
+            ('128', 'Routing to ACCS'), # ROUTING_TO_ACCS
         ),
         null=True,
         blank=True,
@@ -426,7 +425,7 @@ class CardDefs(models.Model):
             ('02', 'Reloadable Smart Card'), # RELOADABLE_SMART_CARD
             ('04', 'SUMMARY_CARD_REQUIRED'), # SUMMARY_CARD_REQUIRED
             ('08', 'Display remaining Credit'), # DISPLAY_CREDIT_REMAINING
-            ('10', 'Load-Only Magnetic Card'), # LOAD_ONLY_MAG_CARD
+            ('16', 'Load-Only Magnetic Card'), # LOAD_ONLY_MAG_CARD
         ),
         null=True,
         blank=True,
