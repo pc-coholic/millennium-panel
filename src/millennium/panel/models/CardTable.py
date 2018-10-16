@@ -42,12 +42,60 @@ class CardTable(models.Model):
             outframe.extend(mmByte(card.initial_date_pos))
             outframe.extend(mmByte(card.discret_data_pos))
 
-            # TODO: Selection if Magnetic or Smartcard
-            #BCD                 service_code[10][2]; 10 * 3 BCD digits
-        	#SCARD_SERVICE_CODE  smart_card;
+            if card.service_code_1:
+                # FIXME: empty servicecodes should be 0x00 0x00 and not 0x00 0x0E
+                outframe.extend(mmBCD(card.service_code_1, 2, True))
+                outframe.extend(mmBCD(card.service_code_2, 2, True))
+                outframe.extend(mmBCD(card.service_code_3, 2, True))
+                outframe.extend(mmBCD(card.service_code_4, 2, True))
+                outframe.extend(mmBCD(card.service_code_5, 2, True))
+                    # FIXME: output exactly SERVICE_CODE_SIZE / change model to FK for service CoinValDefs
+
+                if MTRconfig['MTR'] is 1:
+                    # FIXME: empty servicecodes should be 0x00 0x00 and not 0x00 0x0E
+                    outframe.extend(mmBCD(card.service_code_6, 2, True))
+                    outframe.extend(mmBCD(card.service_code_7, 2, True))
+                    outframe.extend(mmBCD(card.service_code_8, 2, True))
+                    outframe.extend(mmBCD(card.service_code_9, 2, True))
+                    outframe.extend(mmBCD(card.service_code_10, 2, True))
+                    # FIXME: output exactly SERVICE_CODE_SIZE / change model to FK for service CoinValDefs
+                elif MTRconfig['MTR'] is 2:
+                    outframe.extend(mmBCD(card.spill_string, MTRconfig['SPILL_STR_SIZE']))
+                    outframe.extend(mmByte(card.spill_term_char))
+                    outframe.extend(mmByte(card.disc_ptr))
+            else:
+                outframe.extend(mmByte(card.check_digit_1))
+                outframe.extend(mmByte(card.check_digit_2))
+                outframe.extend(mmByte(card.check_digit_3))
+                outframe.extend(mmByte(card.check_digit_4))
+                outframe.extend(mmByte(card.check_digit_5))
+                outframe.extend(mmByte(card.check_digit_6))
+                outframe.extend(mmByte(card.check_value_1))
+                outframe.extend(mmByte(card.check_value_2))
+                outframe.extend(mmByte(card.check_value_3))
+                outframe.extend(mmByte(card.check_value_4))
+                outframe.extend(mmByte(card.check_value_5))
+                outframe.extend(mmByte(card.check_value_6))
+                outframe.extend(mmByte(card.check_value_7))
+                outframe.extend(mmByte(card.check_value_8))
+                outframe.extend(mmByte(card.manufacturer_1))
+                outframe.extend(mmByte(card.manufacturer_2))
+                outframe.extend(mmByte(card.manufacturer_3))
+                outframe.extend(mmByte(card.manufacturer_4))
+                outframe.extend(mmByte(card.manufacturer_5))
+
+                if MTRconfig['MTR'] is 1:
+                    outframe.extend(mmByte(card.spare))
+                elif MTRconfig['MTR'] is 2:
+                    outframe.extend(mmByte(card.disc_ptr))
 
             outframe.extend(mmByte(card.card_ref_num))
             outframe.extend(mmByte(card.carrier_id))
+
+            if MTRconfig['MTR'] is 2:
+                outframe.extend(mmFlags(card.control_inf_1))
+                outframe.extend(mmByte(card.bank_reload_ref))
+                outframe.extend(mmByte(card.lang_code))
 
         # TODO: fill to MTRconfig['DLOG_NUM_CARD_TYPES'] or MTRconfig['MAX_CARD_TABLE_ENTRIES']
 

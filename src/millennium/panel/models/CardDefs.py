@@ -54,6 +54,14 @@ class CardDefs(models.Model):
             (5, 'BOC'), # DLOG_CTE_STDID_BOC
             (6, 'ANSI59'), # DLOG_CTE_STDID_ANSI59
             (7, 'CCIT'), # DLOG_CTE_STDID_CCITT
+            (8, 'PINOFF'), # DB Design Guide
+            (9, 'HELLO'), # DB Design Guide
+            (10, 'SMART CARD'), # DB Design Guide
+            (11, 'Reserved'), # DB Design Guide
+            (12, 'SmartCity GPM416'), # DB Design Guide
+            (13, 'SMARTCITY PCOS'), # DB Design Guide
+            (14, 'SMARTCITY MPCOS'), # DB Design Guide
+            (15, 'PROTON'), # DB Design Guide
         ),
         null=True,
         blank=True,
@@ -339,6 +347,26 @@ class CardDefs(models.Model):
         null=True,
         blank=True,
         verbose_name='6th Check Value',
+        help_text='Smartcard only',
+    )
+    check_value_7 = models.PositiveSmallIntegerField(
+        validators=[
+            MaxValueValidator(255),
+            OnlyNumbersValidator,
+        ],
+        null=True,
+        blank=True,
+        verbose_name='7th Check Value',
+        help_text='Smartcard only',
+    )
+    check_value_8 = models.PositiveSmallIntegerField(
+        validators=[
+            MaxValueValidator(255),
+            OnlyNumbersValidator,
+        ],
+        null=True,
+        blank=True,
+        verbose_name='8th Check Value',
         help_text='Smartcard only',
     )
     manufacturer_1 = models.PositiveSmallIntegerField(
