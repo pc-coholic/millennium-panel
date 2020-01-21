@@ -1,5 +1,5 @@
-Django==1.11.5
-django-debug-toolbar==1.8
--e git+https://github.com/darklow/django-suit.git@v2#egg=django_suit
-sqlparse==0.2.3
-django-multiselectfield==0.1.8
+Django==3.0.2
+django-debug-toolbar==2.1
+django-multiselectfield==0.1.11
+-e git+https://github.com/darklow/django-suit.git@0d854c9b5e81adf9b9ea2ca9ee0a2856dcef5e15#egg=django_suit
+sqlparse==0.3.0
