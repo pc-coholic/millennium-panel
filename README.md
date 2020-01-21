@@ -3,17 +3,17 @@
 __Big fat disclaimer__: This is a work in progress and not a functional product yet, whatsoever. 
 
 ## History
-Some time in 2014, I was an exchange student in Montréal, Canada and stumled right into the decomissioning periode of Millennium payphones by Bell Canada and BCE.
+Some time in 2014, I was an exchange student in Montréal, Canada and stumbled right into the decomissioning periode of Millennium payphones by Bell Canada and BCE.
 
-The local hackerspace, [Foulab](https://foulab.org/), had one of the Millennium phones - however it was gutted do it not being in working order. As I soon found out: a state in which pretty much all privately owned/collected Millenniums were.
+The local hackerspace, [Foulab](https://foulab.org/), had one of the Millennium phones - however it was gutted due to it not being in working order. As I soon found out: a state in which pretty much all privately owned/collected Millenniums were.
 
 I started researching the phones and even managed to find a few likeminded people who were friendly enough to hook me up with some additional information and helping me get development underway.
 
-On November, 13th 2016 we were able to provision a stock Millennium phone: https://twitter.com/boscop/status/797863014569562112
+[On November, 13th 2016 we were able to provision a stock Millennium phone](https://twitter.com/boscop/status/797863014569562112).
 
 However, the code pictured there was still sending static blobs of data (extracted from DEMO-Code firmware and sniffed from working payphone lines). But knowing how packages are to be constructed, I set out to create an easy to use UI which would be available as a hosted service at https://millennium.management/ or for self-hosting.
 
-Probably out of misguided pride, I wanted to offer a somewhat finished, working product to the world before publishing the project. But more than 5 years later the project is still nowhere near completition. This, combined with the excellent work of @hhart on his [mm_manager](https://github.com/hharte/mm_manager), published in January 2020 brought me the conclusion that I should probably just publish everything "as is" and request the support of the community to finish this project.
+Probably out of misguided pride, I wanted to offer a somewhat finished, working product to the world before publishing the project. But more than 5 years later the project is still nowhere near completition. This, combined with the excellent work of [@hharte](https://github.com/hharte/) on his [mm_manager](https://github.com/hharte/mm_manager), published in January 2020 brought me the conclusion that I should probably just publish everything "as is" and request the support of the community to finish this project.
 
 ## Resources
 I curated an extensive collection of information regarding the Millennium payphones at https://wiki.millennium.management/. Feel free to have a look and contribute.
@@ -33,7 +33,7 @@ Every phone needs at least these tables set up:
 Those tables have already been setup in this project.
 
 ## Contributing
-There is still a lot to do in order to get this thing finished and into a working state. Please have a look at the [GitHub issues](https://github.com/pc-coholic/millennium-panel/).
+There is still a lot to do in order to get this thing finished and into a working state. For starters, please have a look at the [GitHub issues](https://github.com/pc-coholic/millennium-panel/).
 
 ## Where is the ~beef~ glue(code)?
 The original idea of this project was to split things into two separate projects: The panel which offers the UI and "package/payload generator" and the modem-daemon, which provides communication. With my predisposition for python, the daemon would have probably just used the existing models of the panel to access all the relevant data and push them out.
